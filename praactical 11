@@ -1,0 +1,67 @@
+#include <iostream> #include <fstream> #include <vector> using namespace std;
+
+struct Student { int rollNo;
+string name, division, address;
+};
+
+
+void addStudent() {
+ofstream file("students.txt", ios::app); Student s;
+cout << "Enter Roll No: "; cin >> s.rollNo; cout << "Enter Name: "; cin >> s.name; cout << "Enter Division: "; cin >> s.division; cout << "Enter Address: "; cin >> s.address;
+file << s.rollNo << " " << s.name << " " << s.division << " " << s.address << endl; file.close();
+cout << "Student record added successfully.\n";
+}
+
+
+void displayStudents() { ifstream file("students.txt"); Student s;
+cout << "\nStudent Records:\n";
+while (file >> s.rollNo >> s.name >> s.division >> s.address) {
+ 
+cout << "Roll No: " << s.rollNo << ", Name: " << s.name << ", Division: " << s.division << ", Address: " << s.address << endl;
+}
+file.close();
+}
+
+
+void searchStudent(int rollNo) { ifstream file("students.txt"); Student s;
+bool found = false;
+while (file >> s.rollNo >> s.name >> s.division >> s.address) { if (s.rollNo == rollNo) {
+cout << "\nStudent Found:\nRoll No: " << s.rollNo << "\nName: " << s.name << "\nDivision: "
+<< s.division << "\nAddress: " << s.address << endl; found = true;
+break;
+}
+}
+if (!found) cout << "\nStudent record not found."; file.close();
+}
+
+
+void deleteStudent(int rollNo) { ifstream file("students.txt"); vector<Student> students; Student s;
+bool found = false;
+while (file >> s.rollNo >> s.name >> s.division >> s.address) { if (s.rollNo != rollNo)
+students.push_back(s); else
+found = true;
+ 
+}
+file.close();
+
+
+ofstream outFile("students.txt"); for (Student st : students)
+outFile << st.rollNo << " " << st.name << " " << st.division << " " << st.address << endl; outFile.close();
+
+if (found)
+cout << "\nStudent record deleted successfully."; else
+cout << "\nStudent record not found.";
+}
+
+
+int main() {
+int choice, rollNo; do {
+cout << "\n1. Add Student\n2. Display Students\n3. Search Student\n4. Delete Student\n5.
+Exit\nEnter your choice: "; cin >> choice;
+switch (choice) {
+case 1: addStudent(); break; case 2: displayStudents(); break;
+case 3: cout << "Enter Roll No to search: "; cin >> rollNo; searchStudent(rollNo); break; case 4: cout << "Enter Roll No to delete: "; cin >> rollNo; deleteStudent(rollNo); break; case 5: cout << "Exiting..."; break;
+default: cout << "Invalid choice, try again.";
+}
+} while (choice != 5); return 0;
+}
